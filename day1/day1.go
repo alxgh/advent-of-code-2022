@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 )
 
@@ -17,12 +18,17 @@ func main() {
 	sc := bufio.NewScanner(f)
 	sc.Split(bufio.ScanLines)
 	max := 0
+	maxs := make([]int, 3)
 	current := 0
 	for sc.Scan() {
 		n := sc.Text()
 		if len(n) == 0 {
 			if current > max {
 				max = current
+			}
+			sort.Ints(maxs)
+			if current > maxs[0] {
+				maxs[0] = current
 			}
 			current = 0
 			continue
@@ -36,5 +42,10 @@ func main() {
 	if current > max {
 		max = current
 	}
+	sort.Ints(maxs)
+	if current > maxs[0] {
+		maxs[0] = current
+	}
 	fmt.Println("MAX:", max)
+	fmt.Println("Three max sum", maxs[0]+maxs[1]+maxs[2])
 }
