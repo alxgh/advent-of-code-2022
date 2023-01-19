@@ -36,6 +36,28 @@ var res = map[string]map[string]int{
 	},
 }
 
+// X -> Lose
+// Y -> Draw
+// Z -> Win
+
+var det = map[string]map[string]string{
+	"A": {
+		"X": "Z",
+		"Y": "X",
+		"Z": "Y",
+	},
+	"B": {
+		"X": "X",
+		"Y": "Y",
+		"Z": "Z",
+	},
+	"C": {
+		"X": "Y",
+		"Y": "Z",
+		"Z": "X",
+	},
+}
+
 func main() {
 	f, err := os.Open("inp.txt")
 	defer func() { _ = f.Close() }()
@@ -49,8 +71,8 @@ func main() {
 	for sc.Scan() {
 		n := sc.Text()
 		strat := strings.Split(n, " ")
-		opp, mine := strat[0], strat[1]
-		score += res[mine][opp]
+		opp, act := strat[0], strat[1]
+		score += res[det[opp][act]][opp]
 	}
 	fmt.Println(score)
 }
