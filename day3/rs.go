@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
+	"math"
 	"os"
 )
 
@@ -17,26 +17,22 @@ func main() {
 	sc := bufio.NewScanner(f)
 	sc.Split(bufio.ScanLines)
 	sum := int64(0)
+	sack := []int64{0, 0, 0}
+	iter := 0
 	for sc.Scan() {
 		n := sc.Text()
-		h := len(n)
-		c1, c2 := n[0:(h/2)], n[h/2:h]
-		log.Println(c1, c2)
-		var x int64
-		var y int64
-		for _, i := range c1 {
+		for _, i := range n {
 			pos := calcPos(i)
-			x |= 1 << pos
+			sack[iter] |= 1 << pos
 		}
-		for _, i := range c2 {
-			pos := calcPos(i)
-			y |= 1 << pos
-		}
-		z := y & x
-		for i := int64(0); i < 52; i++ {
-			if p := z & (1 << i); p != 0 {
-				sum += 1 + i
+		iter += 1
+		if iter == 3 {
+			z := sack[0] & sack[1] & sack[2]
+			if z > 0 {
+				sum += int64(math.Log2(float64(z))) + 1
 			}
+			sack = []int64{0, 0, 0}
+			iter = 0
 		}
 	}
 	fmt.Println(sum)
