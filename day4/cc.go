@@ -27,9 +27,12 @@ func main() {
 		p := strings.Split(n, ",")
 		p1 := strings.Split(p[0], "-")
 		p2 := strings.Split(p[1], "-")
-		if (ati(p1[0]) >= ati(p2[0]) && ati(p1[1]) <= ati(p2[1])) || (ati(p2[0]) >= ati(p1[0]) && ati(p2[1]) <= ati(p1[1])) {
+		if ati(p1[0]) <= ati(p2[1]) && ati(p1[1]) >= ati(p2[0]) {
 			sum += 1
 		}
+		//if (ati(p1[0]) >= ati(p2[0]) && ati(p1[1]) <= ati(p2[1])) || (ati(p2[0]) >= ati(p1[0]) && ati(p2[1]) <= ati(p1[1])) {
+		//	sum += 1
+		//}
 	}
 	fmt.Println(sum)
 }
