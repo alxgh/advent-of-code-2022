@@ -47,8 +47,16 @@ func main() {
 			stackIdxs := strings.Split(sp[1], " to ")
 			fromStackIdx, _ := strconv.Atoi(stackIdxs[0])
 			toStackIdx, _ := strconv.Atoi(stackIdxs[1])
+			temps := stack[uint8]{}
 			for i := 0; i < cnt; i++ {
 				x := stacks[fromStackIdx-1].pop()
+				temps.push(*x)
+			}
+			for {
+				x := temps.pop()
+				if x == nil {
+					break
+				}
 				stacks[toStackIdx-1].push(*x)
 			}
 		} else {
