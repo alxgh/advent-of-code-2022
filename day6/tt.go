@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"log"
 	"os"
 )
 
@@ -15,17 +15,28 @@ func main() {
 	}
 	sc := bufio.NewScanner(f)
 	sc.Split(bufio.ScanRunes)
-	marker := [4]uint8{0, 0, 0, 0}
+	pmarker := [4]uint8{0, 0, 0, 0}
+	mmarker := [14]uint8{}
+	mc := 4
+	pmf := false
 	var x int64
 	cnt := 0
+
 	for sc.Scan() {
 		cnt += 1
 		n := sc.Bytes()
 		c := uint8(n[0])
-		marker[0] = c
+		pmarker[0] = c
+		mmarker[0] = c
 		x = 0
 		found := true
-		for _, m := range marker {
+		for i := 0; i < mc; i++ {
+			var m uint8
+			if pmf {
+				m = mmarker[i]
+			} else {
+				m = pmarker[i]
+			}
 			if m == 0 {
 				found = false
 				break
@@ -37,11 +48,19 @@ func main() {
 			}
 			x |= mm
 		}
+
 		if found {
-			fmt.Println(cnt)
-			break
+			if pmf {
+				log.Println(cnt)
+				break
+			} else {
+				pmf = true
+				mc = 14
+			}
 		}
-		copy(marker[1:4], marker[0:3])
-		marker[0] = 0
+		copy(pmarker[1:4], pmarker[0:3])
+		pmarker[0] = 0
+		copy(mmarker[1:14], mmarker[0:13])
+		mmarker[0] = 0
 	}
 }
