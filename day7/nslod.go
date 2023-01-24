@@ -76,6 +76,8 @@ func main() {
 
 	dirs := []*directory{rootdir}
 	var totalSize uint64
+	needed := uint64(30000000) - (uint64(70000000) - rootdir.fileSizes)
+	min := uint64(70000001)
 	for len(dirs) > 0 {
 		dir := dirs[0]
 		if len(dirs) == 0 {
@@ -86,11 +88,17 @@ func main() {
 
 		if dir.fileSizes < 100000 {
 			totalSize += dir.fileSizes
+
+		}
+		if dir.fileSizes >= needed && dir.fileSizes < min {
+			min = dir.fileSizes
 		}
 
 		for _, d := range dir.subdirs {
 			dirs = append(dirs, d)
 		}
 	}
+
 	fmt.Println(totalSize)
+	fmt.Println(min)
 }
