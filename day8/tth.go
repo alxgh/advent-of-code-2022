@@ -37,7 +37,6 @@ func main() {
 	colc := len(forest[0])
 
 	m := make(map[int]bool, 0)
-
 	for r, trees := range forest {
 		lh := 0
 		for c := 0; c < colc; c++ {
@@ -91,5 +90,67 @@ func main() {
 			}
 		}
 	}
+
 	log.Println(len(m))
+
+	highScore := 0
+	for c := 0; c < colc; c++ {
+		for r := 0; r < rowsc; r++ {
+			score := 1
+			t := forest[r][c]
+			open := true
+			// right
+			for i := c + 1; i < colc; i++ {
+				if forest[r][i] >= t {
+					score *= i - c
+					open = false
+					break
+				}
+			}
+			if open {
+				score *= colc - 1 - c
+			}
+			open = true
+			// left
+			for i := c - 1; i >= 0; i-- {
+				if forest[r][i] >= t {
+					score *= c - i
+					open = false
+					break
+				}
+			}
+			if open {
+				score *= c
+			}
+			open = true
+			// up
+			for i := r - 1; i >= 0; i-- {
+				if forest[i][c] >= t {
+					score *= r - i
+					open = false
+					break
+				}
+			}
+			if open {
+				score *= r
+			}
+			open = true
+			// down
+			for i := r + 1; i < rowsc; i++ {
+				if forest[i][c] >= t {
+					score *= i - r
+					open = false
+					break
+				}
+			}
+			if open {
+				score *= rowsc - 1 - r
+			}
+			open = true
+			if score > highScore {
+				highScore = score
+			}
+		}
+	}
+	log.Println(highScore)
 }
