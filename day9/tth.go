@@ -19,7 +19,7 @@ func main() {
 	sc := bufio.NewScanner(f)
 	sc.Split(bufio.ScanLines)
 	// {x, y}
-	hpos, tpos := []int{0, 0}, []int{0, 0}
+	var knots [10][2]int
 	v := make(map[[2]int]bool)
 	for sc.Scan() {
 		n := sc.Text()
@@ -29,46 +29,50 @@ func main() {
 		for i := 0; i < cnt; i++ {
 			switch dir {
 			case "R":
-				hpos[1] += 1
+				knots[0][0] += 1
 			case "L":
-				hpos[1] -= 1
+				knots[0][0] -= 1
 			case "U":
-				hpos[0] += 1
+				knots[0][1] += 1
 			case "D":
-				hpos[0] -= 1
+				knots[0][1] -= 1
 			}
-			xdiff := hpos[0] - tpos[0]
-			ydiff := hpos[1] - tpos[1]
-			// check if tail is still is in touch with head
-			if math.Abs(float64(xdiff)) > 1 {
-				if xdiff > 0 {
-					tpos[0] += 1
-				} else {
-					tpos[0] -= 1
-				}
-				if math.Abs(float64(ydiff)) > 0 {
-					if ydiff > 0 {
-						tpos[1] += 1
-					} else {
-						tpos[1] -= 1
-					}
-				}
-			}
-			if math.Abs(float64(ydiff)) > 1 {
-				if ydiff > 0 {
-					tpos[1] += 1
-				} else {
-					tpos[1] -= 1
-				}
-				if math.Abs(float64(xdiff)) > 0 {
+			for x := 1; x < 10; x++ {
+				xdiff := knots[x-1][0] - knots[x][0]
+				ydiff := knots[x-1][1] - knots[x][1]
+				// check if tail is still is in touch with head
+				if math.Abs(float64(xdiff)) > 1 {
 					if xdiff > 0 {
-						tpos[0] += 1
+						knots[x][0] += 1
 					} else {
-						tpos[0] -= 1
+						knots[x][0] -= 1
+					}
+					if math.Abs(float64(ydiff)) > 0 {
+						if ydiff > 0 {
+							knots[x][1] += 1
+						} else {
+							knots[x][1] -= 1
+						}
+					}
+					continue
+				}
+				if math.Abs(float64(ydiff)) > 1 {
+					if ydiff > 0 {
+						knots[x][1] += 1
+					} else {
+						knots[x][1] -= 1
+					}
+					if math.Abs(float64(xdiff)) > 0 {
+						if xdiff > 0 {
+							knots[x][0] += 1
+						} else {
+							knots[x][0] -= 1
+						}
 					}
 				}
 			}
-			v[[2]int{tpos[0], tpos[1]}] = true
+			//log.Println(knots)
+			v[[2]int{knots[9][0], knots[9][1]}] = true
 		}
 	}
 	log.Println(len(v))
