@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -41,8 +42,16 @@ func main() {
 			istrCycles -= 1
 
 			if (cycle+20)%40 == 0 {
-				log.Println(cycle, xreg)
 				sum += cycle * xreg
+			}
+			c := ' '
+			cc := (cycle - 1) % 40
+			if cc >= xreg-1 && cc <= xreg+1 {
+				c = '#'
+			}
+			fmt.Printf("%c", c)
+			if cycle%40 == 0 {
+				fmt.Println()
 			}
 		}
 		if fn != nil {
