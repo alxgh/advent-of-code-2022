@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"sort"
 	"strconv"
@@ -30,6 +31,30 @@ func (m *monkey) push(item int) {
 	m.items = append(m.items, item)
 }
 
+func lcm(n []int) int {
+	c := make([]int, len(n))
+	copy(c[:], n[:])
+	for {
+		prev := c[0]
+		f := true
+		min := math.MaxInt64
+		minIdx := 0
+		for idx, i := range c {
+			if i != prev {
+				f = false
+			}
+			if i < min {
+				min = i
+				minIdx = idx
+			}
+		}
+		if f {
+			return c[0]
+		}
+		c[minIdx] = c[minIdx] + n[minIdx]
+	}
+}
+
 func main() {
 	f, err := os.Open("inp.txt")
 	defer func() { _ = f.Close() }()
@@ -40,6 +65,7 @@ func main() {
 	sc := bufio.NewScanner(f)
 	sc.Split(bufio.ScanLines)
 	monkeys := make(map[int]*monkey)
+	d := make([]int, 0)
 	for {
 		if !sc.Scan() {
 			break
@@ -89,11 +115,13 @@ func main() {
 			return falseAction
 		}
 		monkeys[number] = &m
+		d = append(d, testNum)
 		sc.Scan()
 	}
 
 	l := len(monkeys)
-	for i := 0; i < 20; i++ {
+	div := lcm(d)
+	for i := 0; i < 10000; i++ {
 		for z := 0; z < l; z++ {
 			m := monkeys[z]
 			for {
@@ -102,9 +130,9 @@ func main() {
 					break
 				}
 				m.inspections += 1
-				newWorry := m.op(item) / 3
+				newWorry := m.op(item) / 1
 				newMonkey := m.test(newWorry)
-				monkeys[newMonkey].push(newWorry)
+				monkeys[newMonkey].push(newWorry % div)
 			}
 		}
 	}
