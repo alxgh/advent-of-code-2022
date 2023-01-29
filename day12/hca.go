@@ -20,18 +20,20 @@ func main() {
 	}
 	sc := bufio.NewScanner(f)
 	sc.Split(bufio.ScanLines)
-	start := [2]int{}
 	dest := [2]int{}
 	m := make([][]uint8, 0)
 	r := 0
+
+	paths := make([]*path, 0)
+	v := map[[2]int]bool{}
 	for sc.Scan() {
 		n := sc.Text()
 		m = append(m, make([]uint8, 0, len(n)))
 		for c, b := range strings.Split(n, "") {
-			if b[0] == 'S' {
+			if b[0] == 'S' || b[0] == 'a' {
 				m[r] = append(m[r], 'a')
-				start[0] = r
-				start[1] = c
+				paths = append(paths, &path{c: [][2]int{{r, c}}})
+				v[[2]int{r, c}] = true
 			} else if b[0] == 'E' {
 				dest[0] = r
 				dest[1] = c
@@ -46,13 +48,6 @@ func main() {
 	cellsCount := len(m[0])
 	rowsCount := len(m)
 
-	paths := make([]*path, 0)
-
-	paths = append(paths, &path{
-		c: [][2]int{start},
-	})
-
-	v := map[[2]int]bool{start: true}
 	var dpath path
 	for {
 		//sort.Slice(paths, func(i, j int) bool {
